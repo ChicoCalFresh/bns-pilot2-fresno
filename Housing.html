@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Housing</title>
+
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">BNS3</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Overview</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Demographics
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Personal_Demo.html">Personal Demographics</a>
+    </li>
+    <li>
+      <a href="Student_Demo.html">Student Demographics</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Workload.html">Workload</a>
+</li>
+<li>
+  <a href="Housing.html">Housing</a>
+</li>
+<li>
+  <a href="CalFresh.html">CalFresh</a>
+</li>
+<li>
+  <a href="Basic_Needs.html">Basic Needs Services</a>
+</li>
+<li>
+  <a href="Food_Security.html">Food Security</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Health
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Eating_Habits.html">Eating Habits</a>
+    </li>
+    <li>
+      <a href="Physical_Activity.html">Physical Activity</a>
+    </li>
+    <li>
+      <a href="Sleep.html">Sleep</a>
+    </li>
+    <li>
+      <a href="Mental_Health.html">Mental Health</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="Instructions.html">
+    <span class="fa fa-question"></span>
+     
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Housing</h1>
+
+</div>
+
+
+<p>The following questions were asking in regard to students current and
+past housing situations. This includes changes due to COVID, if they are
+living near their college (with most schools being remote at the time of
+the survey), the type of home they currently live in, and hardships that
+they faced in the past year with housing.</p>
+<div id="covid-housing-impact" class="section level2">
+<h2>COVID Housing Impact</h2>
+<p><strong>Has your housing situation changed due to COVID-19? (n=122,
+91% of 134 reporting).</strong></p>
+<div class="row">
+<div class="col-md-6">
+<p><img src="Housing_files/figure-html/unnamed-chunk-2-1.png" width="384" style="display: block; margin: auto;" /></p>
+</div>
+<div class="col-md-5">
+<p><br><br><br>Figure 4.1: Impact of COVID on Housing <br></p>
+<p>There are 93 people that participated in the survey that claim their
+housing has not changed due to the impacts of COVID. There also are 29
+people that say their housing situation did change due to the impacts of
+COVID.</p>
+</div>
+</div>
+<p><br /></p>
+</div>
+<div id="living-near-college" class="section level2">
+<h2>Living Near College</h2>
+<p><strong>Are you currently living in the city/area in which you are
+enrolled in college? (n=126, 94% of 134 reporting).</strong></p>
+<div class="row">
+<div class="col-md-6">
+<p><img src="Housing_files/figure-html/unnamed-chunk-3-1.png" width="384" style="display: block; margin: auto;" /></p>
+</div>
+<div class="col-md-5">
+<p><br><br>Figure 4.2: Living Near Enrolled College <br></p>
+<p>There are 50 people that participated in the survey that do not
+currently live in the city/area of their enrolled college. There also
+are 76 people that say they do live in the city/area of their enrolled
+college.</p>
+</div>
+</div>
+<p><br /></p>
+</div>
+<div id="current-housing-situation" class="section level2">
+<h2>Current Housing Situation</h2>
+<strong>Which best describes your current housing situation?</strong>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Current Housing Situation
+</th>
+<th style="text-align:left;">
+Yes (%)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+I live with parents or other relatives, not paying rent with my own
+money
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+46/122 (37.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+I live with parents or other relatives, paying rent with my own money
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+27/122 (22.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+I rent an apartment or house without roommates
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+23/122 (18.9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+I rent an apartment or house with roommates
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+15/122 (12.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+I own my own home
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+6/122 (4.9%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+I am temporarily living with friends or relatives, without permanent
+housing (couch surfing)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+2/122 (1.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Other
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+2/122 (1.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+I live in university housing or residence halls
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1/122 (0.8%)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="in-the-past-12-months" class="section level2">
+<h2>In the past 12 months…</h2>
+<em>The following were asked as a series of Yes/No questions to help
+better understand the living situations of participating students.</em>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Yes (%)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Have you been unable to pay or underpaid a utility bill (n = 114)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+31 (27.2%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Have you been unable to pay or underpaid your rent or mortgage (n =
+110)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+24 (21.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Was there a rent or mortgage increase that made it difficult to pay (n =
+106)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+23 (21.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Have you ever been late paying rent or mortgage (n = 114)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+22 (19.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Have you lived with others beyond the expected capacity of your house or
+apartment (n = 117)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+16 (13.7%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Have you had to stay in a hostile housing environment or abusive
+relationship because you had no other place to live (n = 114)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+6 (5.3%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Have you been asked to leave your home by someone you lived with (n =
+119)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+4 (3.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Have you been evicted (n = 122)?
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1 (0.8%)
+</td>
+</tr>
+</tbody>
+</table>
+<p><em>The following were asked as frequency questions to help better
+understand the living situations of participating students.</em> <br>
+<img src="Housing_files/figure-html/unnamed-chunk-6-1.png" width="768" style="display: block; margin: auto;" />
+Figure 4.3: Unsure of Sleeping and Times Moved</p>
+<p>Over the past 12 months, the majority of people were never unsure of
+where they would be sleeping (108 people) or have not moved housing (92
+people). Responses claiming sleep location uncertainty were closely
+distributed among the frequency options. There were 22 people have
+claimed they moved once in the last 12 months and 7 people have moved
+twice. Only a small minority have moved 3 or more times in the last 12
+months.</p>
+<p><br></p>
+</div>
+<div id="sleeping-places" class="section level2">
+<h2>Sleeping Places</h2>
+<p><strong>In the last 30 days, or in the past 12 months, have you slept
+in any of the following places?</strong><br />
+<em>Note: students were only allowed to chose either “last 30 days” or
+“past 12 months”, so students who selected past 12 months are
+interpreted as “over 30 days but less than 1 year”. </em></p>
+<div id="stable" class="section level3">
+<h3>Stable</h3>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Last 30 days
+</th>
+<th style="text-align:left;">
+Last 12 months
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+In a rented or owned house, mobile home, or apartment with my family
+(parent, guardian, relative or caretaker)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+19/123 (15.4%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+44/123 (35.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+In a rented or owned house, mobile home, or apartment (alone or with
+roommates or friends)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+14/123 (11.4%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+28/123 (22.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Campus or University Housing
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1/123 (0.8%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+3/123 (2.4%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sorority/Fraternity house
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1/123 (0.8%)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="unstable" class="section level3">
+<h3>Unstable</h3>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+Last 30 days
+</th>
+<th style="text-align:left;">
+Last 12 months
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Temporarily staying with a relative, friend or couch surfing until I
+find other housing
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+2/123 (1.6%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+5/123 (4.1%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Temporarily at a hotel or motel without a permanent home to return to
+(not on vacation or business travel)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+2/123 (1.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+In a car, truck, van, RV or camper
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+2/123 (1.6%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+At a shelter
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1/123 (0.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Outdoor location such as street, sidewalk, alley, park, etc.
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1/123 (0.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+In a closed area/space with a roof not meant for human habitation such
+as an abandoned building, garage, tent, etc.
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1/123 (0.8%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+In a transitional housing or independent living program
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+1/123 (0.8%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+At a group home such as halfway house or residential program for mental
+health or substance abuse
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+<td style="text-align:left;width: 3.5cm; ">
+0/123 (0.0%)
+</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+</div>
+<div id="unstable-housing" class="section level2">
+<h2>Unstable Housing</h2>
+<p><strong>In the past 12 months, if you have experienced unstable
+housing, what was the most common reason? (n=25, 19% of 134
+reporting).</strong>
+<img src="Housing_files/figure-html/unnamed-chunk-9-1.png" width="796.8" style="display: block; margin: auto;" />
+Figure 4.4: Unstable Housing Identification</p>
+<p>The data shows that of the people who experienced unstable housing,
+the most common cause was not having enough money to cover housing
+expenses (13 people). The next most common was cause was from issues
+with roommates, both having conflicts (4 people) and them being
+unable/unwilling to pay living expenses (2 people).</p>
+<p><br></p>
+</div>
+<div id="housing-insecure-homeless" class="section level2">
+<h2>Housing Insecure &amp; Homeless</h2>
+<ul>
+<li>Students with at least 3 housing insecurity indicators present are
+housing insecure, while those with 2 or fewer are not considered housing
+insecure (n=95, 71% of 134 reporting).</li>
+<li>Students with at least 1 homelessness insecurity indicator present
+are considered to have experience homelessness at date of survey (n=123,
+92% of 134 reporting).</li>
+</ul>
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Unstable Housing Type
+</th>
+<th style="text-align:left;">
+Yes (%)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Housing Insecure
+</td>
+<td style="text-align:left;">
+14.7%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Homeless (year)
+</td>
+<td style="text-align:left;">
+4.9%
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Homeless (month)
+</td>
+<td style="text-align:left;">
+2.4%
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><p>The data indicates that the majority of students are not
+considered to be housing insecure (81 students, 85.3%), while the
+remaining students could be classified as housing insecure based on
+their indicators (14 students, 14.7%).</p></li>
+<li><p>The data indicates that the majority of students did not
+experience homelessness in either the past month (120 students, 97.6%)
+or year (117 students, 95.1%).</p></li>
+</ul>
+<p><br /></p>
+</details>
+<p><br /></p>
+</div>
+
+<br>
+
+<img src="CHC_Logo.png", style="width:870px">
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

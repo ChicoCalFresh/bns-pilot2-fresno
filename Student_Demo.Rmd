@@ -1,0 +1,170 @@
+---
+title: "Student Demographics"
+output: 
+  html_document: 
+    toc: yes
+    toc_float: yes
+    css: styles.css
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+source("common_code.R")
+
+page.num <- 2
+```
+
+The following set of questions were asked in regard to the students' academic demographics. This includes information such as their class standing, major, GPA, and number of enrolled units. They were also asked questions about programs they participate in as well as what type of student they are (transfer, international, etc.).
+
+<br>
+
+
+## Class Standing
+**Estimate your class standing by units completed `r print_n_reporting('academic_level')`**
+
+<div class = "row">
+<div class = "col-md-7">
+```{r, fig.height=3.5, fig.width=4.5}
+plot_frq(bns$academic_level, wrap.labels = 8, ylim=c(0,85)) + xlab('Class Standing') + 
+  ylab("Frequency")
+```
+</div>
+  
+<div class = "col-md-4">
+<br><br> `r fig.cap(page.num, "Current Academic Level")` <br>
+
+The survey was distributed to all junior and senior undergraduate students who met the EOP eligibility requirement. Out of the `r sum(!is.na(bns$academic_level))` respondents, `r sum(bns$academic_level == "Senior (90+ semester units)", na.rm = TRUE)` (`r percent(mean(bns$academic_level == "Senior (90+ semester units)", na.rm = TRUE),accuracy =.1)`) reported being seniors
+
+
+</div>
+</div>
+
+<br> 
+
+## Major
+**What is your major? `r print_n_reporting('q16')`**
+```{r, fig.width=7}
+bns <- bns %>% mutate(q16=recode(q16, 
+                                 "Science, Technology, Engineering and Math (STEM) (Includes Medicine, Computer Science, Agriculture, Accounting, Statistics, Nursing, and Nutrition)" = "Science, Technology, Engineering and Math (STEM)"))
+
+plot_frq(bns$q16,, wrap.labels = 16, sort.frq = 'desc') + xlab('') + ylab("Frequency")
+```
+`r fig.cap(page.num, "Declaration of Major")`
+
+*NOTE: Science, Technology, Engineering and Math (STEM) was shortened for the figure above, but also includes the following majors: Medicine, Computer Science, Agriculture, Accounting, Statistics, Nursing, and Nutrition.*
+
+The majority of students in the data are majoring in a `r names(sort(table(bns$q16), decreasing=TRUE)[1])` program (`r unname(sort(table(bns$q16), decreasing=TRUE)[1])` people). There were `r unname(sort(table(bns$q16), decreasing=TRUE)[2])` students who were `r names(sort(table(bns$q16), decreasing=TRUE)[2])` majors. Students were also given the option of "Other" to fill in a major if it did not fall into one of the above categories. There were `r unname(colSums(!is.na(bns))['q16_6_text'])` out of `r unname(sort(table(bns$q16), decreasing=TRUE)['Other'])` respondents who specified their "Other" major, with results shown in Table 2.1 below. 
+
+<br />
+
+### Other Majors
+
+Table 2.1: Other Major Declarations
+```{r}
+cnames <- c('Other Majors', 'Occurrence (%)')
+qs <- unique(bns$q16_6_text) %>% na.omit()
+question_table('q16_6_text', qs, cnames)
+```
+
+<br>
+
+## Overall GPA
+**What is your approximate overall grade point average (GPA)? `r print_n_reporting('q17')`**
+
+<div class = "row">
+<div class = "col-md-7">
+```{r, fig.height=4, fig.width=4.5}
+plot_frq(bns$q17, wrap.labels = 8) + xlab('GPA') + ylab("Frequency")
+```
+</div>
+  
+<div class = "col-md-4">
+<br><br><br><br> `r fig.cap(page.num, "Approximate Overall GPA")` <br>
+
+The highest reported overall GPA for the data ranges from `r names(sort(table(bns$q17), decreasing=TRUE)[1])` (`r unname(sort(table(bns$q17), decreasing=TRUE)[1])` students), followed by `r names(sort(table(bns$q17), decreasing=TRUE)[2])` (`r unname(sort(table(bns$q17), decreasing=TRUE)[2])` students). There are also `r unname(sort(table(bns$q17), decreasing=TRUE)[3])` students who have an overall GPA between `r names(sort(table(bns$q17), decreasing=TRUE)[3])`.
+</div>
+</div>
+
+<br />
+
+## Currently Enrolled Units
+**How many units are you currently taking? `r print_n_reporting('q18')`**
+```{r, fig.width=7, fig.height=3.4}
+xlbls <- c(as.character(0:21), "22+")
+bns <- bns %>% mutate(q18=recode(q18, "22+"="22"),
+                      q18=as.numeric(q18))
+
+plot_frq(bns$q18, type='histogram', show.prc = FALSE, show.n = FALSE, ylim = c(0,30)) +
+  scale_x_continuous(breaks=0:22, labels=xlbls) + xlab('Units') + ylab("Frequency")
+
+full_time <- bns %>% select(q18) %>% 
+             filter(q18 >= 12) 
+```
+`r fig.cap(page.num, "Currently Enrolled Academic Units")`
+
+*Note that "22+" was rounded to 22 in the following analysis for the currently enrolled number of units*. 
+
+The average number of units that a survey participant in this data is enrolled in is `r round(mean(bns$q18, na.rm = TRUE), 2)` units, while the median is `r median(bns$q18, na.rm = TRUE)` units. The data indicates `r length(full_time$q18)` students are considered full-time (12 or more units), with `r names(sort(table(bns$q18), decreasing=TRUE)[1])` units being the highest occurring and `r names(sort(table(bns$q18), decreasing=TRUE)[2])` units being the second highest occurring.
+
+<br />
+
+## Student Identifiers
+
+The following tables contain separate questions that were asked as a series of Yes/No responses to help further understand students.
+
+### I identify as...
+```{r}
+questions <- c(paste0('q14_', 1:2), paste0('q14_', 5:15))
+rnames <- c("A Transfer Student", "LGBTQA+", "A student with a disability", "A former foster youth/child",
+            "An International student", "A non-California resident (not International)",
+            "An Upward Bound, Educational Talent Search, AVID, TRIO, or other college preparation program alumni student",
+            "An EOP (Educational Opportunity Program) student", "An ESL (English as a Second Language) student",
+            "A Veteran of military service", "A student athlete", "A DREAM (i.e. undocumented) student",
+            "A DACA (i.e. Deferred Action for Childhood Arrivals) student")
+binary_table(questions, "Yes", rnames, ".")
+```
+
+
+<br />
+
+### Disability Support Services
+*Note*: This name varies by campus and may not always be called the Disability Support Service Center. The $n$ reported is the number of respondents who answered each question. Disagreement in percentages indicates that not all students answered both questions.
+
+```{r, fig.height=5, fig.width=7}
+questions <- paste0('q14_', 3:4)
+rnames <- c('I receive services through the Disability Support Services Center',
+            'I have NOT received services through the Disability Support Services Center')
+binary_table(questions, "Yes", rnames, ".")
+```
+
+### I participate in...
+```{r}
+questions <- paste0('q14_', 18:21)
+rnames <- c('CalWorks (i.e. TANF or cash aid for needy families) or Aid to Families with Dependent Children (AFDC)',
+            'The Job Opportunities and Basic Skills (JOBS) program',
+            'The CalFresh Employment or Training (CFET) Program',
+            'The Greek system (i.e. sorority, fraternity)')
+binary_table(questions, "Yes", rnames, ".")
+```
+
+### I am...
+```{r}
+questions <- c(paste0('q14_', 16:17), paste0('q14_', 22:26), paste0('q101_', 1:2))
+rnames <- c('Approved, awarded, or accepted for work study (with or without a work study job)',
+            'Currently a Pell Grant recipient', 'Enrolled in Workforce Innovation and Opportunity Act (WIOA)',
+            'Enrolled in the Mathematics, Engineering, Science achievement (MESA) program',
+            paste0('Enrolled in a program that increases employability for current and former foster youth ',
+                   '(PATH Scholars, Educational Opportunity Resilient Scholars Program (RSP), Renaissance Scholars Program)'),
+            'The parent/guardian of a dependent household member between the age of 6 and 12 with no adequate childcare',
+            'A single parent of a dependent household member under the age of 12',
+            'Enrolled in a Teaching Credential Program', 'Enrolled in the School of Social Work Practicum Program (Field work program)')
+binary_table(questions, "Yes", rnames, ".")
+```
+
+
+---
+
+## [Personal Demographics](Personal_Demo.html)
+*Click here to go to the Personal Demographics page.*
+

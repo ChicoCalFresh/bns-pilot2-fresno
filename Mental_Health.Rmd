@@ -1,0 +1,82 @@
+---
+title: "Mental Health"
+output: 
+  html_document: 
+    toc: yes
+    toc_float: yes
+    css: styles.css
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, include=FALSE}
+source("common_code.R")
+page.num <- 11
+```
+
+The following questions were asked in regards to students' feelings about their mental health. Questions consisted of: if they have experienced any increased mental stress, if they have sought out services to help them, and how often they have felt certain types of mental stress over the past month.
+
+<br>
+
+## Increased Mental Stress
+**How many days in the past month have you experienced heightened anxiety, stress, depression and/or problems with emotions? `r print_n_reporting("q90")`**
+```{r}
+hist_with_box('q90', 21, 4, 0.4, NULL, c(0,25), 'Number of Days in Last Month')
+```
+`r fig.cap(page.num, "Increased Mental Stress Distribution")`
+
+Over the past month, the participants of the survey claimed to have experienced increased mental stress for an average (denoted by the dotted line) of `r round(mean(bns$q90, na.rm = TRUE), 1)` days, with a median value of `r round(median(bns$q90, na.rm = TRUE), 1)` days. A large amount, and the most selected answer, claim to have experienced increased mental stress every day over the last month (`r unname(table(bns$q90)['30'])` people).
+
+Over the past month, the participants of the survey claimed to have experienced increased mental stress for an average (denoted by the dotted line) of `r round(mean(bns$q90, na.rm = TRUE), 1)` days, with a median value of `r round(median(bns$q90, na.rm = TRUE), 1)` days. `r unname(table(bns$q90)['30'])` people indicated feeling, an increased amount of mental stress everyday over the past month, which was the most selected answer among participants.
+
+<br>
+
+## Mental Health Services 
+**Have you received or tried to receive mental health services over the past 12 months? `r print_n_reporting("q91")`**
+
+<div class = "row">
+<div class = "col-md-6">
+```{r, fig.height=4, fig.width=4}
+plot_frq(bns$q91) + xlab('Seeked Out Services') + ylab("Frequency")
+```
+</div>
+  
+<div class = "col-md-5">
+<br><br><br>`r fig.cap(page.num, "Sought Out Mental Health Services")` <br>
+
+Over the past year, `r unname(sort(table(bns$q91), decreasing = TRUE)['No'])` students did not receive or try to receive mental health services. `r unname(sort(table(bns$q91), decreasing = TRUE)['Yes'])` people claim that they have received or tried to receive mental health services.
+</div>
+</div>
+
+<br>
+
+## Mental Health Feelings
+**In the last month how often have you felt:**
+```{r, fig.width=8}
+questions <- bns %>% select(q92, q93, q94, q97)
+names(questions) <- c("That you were unable to control the important things in your life.",
+                      "Confident about your ability to handle your personal problems.",
+                      "That things were going your way.",
+                      "Difficulties were piling up so high that you could not overcome them.")
+plot_likert(questions,
+            grid.range = c(1.2, 1.2),
+            wrap.legend.labels = 20,
+            expand.grid = FALSE,
+            values = "sum.outside",
+            catcount = 5,
+            geom.colors = likert.pal.5,
+            show.prc.sign = TRUE, reverse.scale = TRUE) + theme_bw() + theme(legend.position = "top")
+```
+`r fig.cap(page.num, "Feelings Around Mental Health")`
+
+
+---
+
+## [Eating Habits](Eating_Habits.html)
+*Click here to go to the Eating Habits page.*
+
+## [Physical Activity](Physical_Activity.html)
+*Click here to go to the Physical Activity page.*
+
+## [Sleep](Sleep.html)
+*Click here to go to the Sleep page.*

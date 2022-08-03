@@ -1,0 +1,185 @@
+---
+title: "Personal Demographics"
+output: 
+  html_document: 
+    toc: yes
+    toc_float: yes
+    css: styles.css
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, include=FALSE}
+source("common_code.R")
+page.num <- 1
+```
+
+The following set of questions were asked in regard to the students' personal demographics. Questions include the students' age at the time of the survey (2020), ethnicities they identify as, and the number of dependents they are responsible for taking care of. They were also asked about their parents' education, which will help us identify first generation college students.
+
+<br>
+
+## Age
+**The following was determined by taking the difference between birth date and the time at which the survey was completed `r print_n_reporting('age')`**
+```{r}
+hist_with_box('age', 35, 5, 0.3, 1, c(0,40), 'Age (Years)')
+```
+`r fig.cap(page.num, "Student Age Distribution")`
+
+The age of the participants in the survey range from `r min(bns$age, na.rm = TRUE)` to `r max(bns$age, na.rm = TRUE)` at the time of completion, with the majority of participants being between 20-30 years old. The average age of a participant in this survey is `r round(mean(bns$age, na.rm = TRUE),1)` years old.
+
+<br />
+
+## Gender Identity
+**What is your gender identity? `r print_n_reporting('q7')`**
+
+<div class = "row">
+<div class = "col-md-7">
+```{r, fig.height=4.5, fig.width=4.5}
+q7.to.plot <- bns %>% select(q7) %>% replace(is.na(.), "Prefer not to Answer")
+
+plot_frq(q7.to.plot$q7, sort.frq="desc", show.na = TRUE) + xlab('Gender') + ylab("Frequency")
+rm(q7.to.plot)
+```
+</div>
+  
+<div class = "col-md-4">
+<br><br><br>`r fig.cap(page.num, "Student Gender Identity")` <br>
+
+Of the survey participants, `r unname(table(bns$q7)['Woman'])` of them identify as a woman and `r unname(table(bns$q7)['Man'])` identify as a man. There are also 2 survey participants who preferred not to answer this question.
+
+
+</div>
+</div>
+
+<br />
+
+
+## Ethnicity
+**In the US Census, Hispanic Origins are not races. Do you identify as Hispanic or Latino or Spanish Origin? `r print_n_reporting('q8')`**
+
+<div class = "row">
+<div class = "col-md-6">
+```{r, fig.height=4, fig.width=4}
+tmp <- data.frame(q8=bns$q8) %>% mutate(hispanic=as.factor(ifelse(is.na(q8), NA, ifelse(grepl("Yes", q8), "Yes", "No")))) %>% select(-q8)
+
+plot_frq(tmp$hispanic) + xlab("") + ylab("Frequency")
+```
+</div>
+  
+<div class = "col-md-5">
+<br><br>`r fig.cap(page.num, "Hispanic Origin Identification")` <br>
+
+The Basic Needs Survey defines Hispanic Origin to include: Mexican, Mexican American, Chicano, Puerto Rican, or another Hispanic/Latino/Spanish origin. The data indicates that the majority of survey participants identify as of Hispanic Origins (`r unname(table(tmp$hispanic)['Yes'])` people), while approximately a quarter of them do not identify as being of Hispanic Origins (`r unname(table(tmp$hispanic)['No'])` people).
+</div>
+</div>
+
+<br />
+
+## Race
+```{r}
+tmp <- bns %>% select(starts_with("eth_")) %>% mutate(white=ifelse(is.na(eth_white), NA, ifelse(eth_white == 1, 1, 0)),
+                                                      black=ifelse(is.na(eth_african_amer), NA, ifelse(eth_african_amer == 1, 1, 0)),
+                                                      amer_indian=ifelse(is.na(eth_amer_inidian), NA, ifelse(eth_amer_inidian == 1, 1, 0)),
+                                                      asian=ifelse((is.na(eth_chinese) | is.na(eth_filipino) | is.na(eth_asian_indian) |
+                                                                      is.na(eth_other_asian) | is.na(eth_vietnamese) | is.na(eth_korean) |
+                                                                      is.na(eth_japanese)), NA, 
+                                                                   ifelse((eth_chinese == 1 | eth_filipino == 1 | eth_asian_indian  == 1 |
+                                                                      eth_other_asian == 1 | eth_vietnamese == 1 | eth_korean == 1 |
+                                                                      eth_japanese == 1), 1, 0)),
+                                                      hawaiian=ifelse((is.na(eth_pacific_islander) | is.na(eth_chamorro) | is.na(eth_hawaiian) |
+                                                                         is.na(eth_samoan)), NA, 
+                                                                       ifelse((eth_pacific_islander == 1 | eth_chamorro == 1 | eth_hawaiian == 1 |
+                                                                        eth_samoan == 1), 1, 0))) %>% select(15:19)
+```
+**What race do you identify as? Select all that apply `r print_n_reporting_tmp('white')`** *Note that races were collapsed from an original 14 options down to 5 broad groups defined by [census.gov](https://www.census.gov/quickfacts/fact/note/US/RHI625219).*
+
+Table 1.1: Student Race Identification
+```{r}
+cnames <- c("White", "Black or African American", "American Indian and Alaska Native", "Asian", "Native Hawaiian and Other Pacific Islander")
+tmp2 <- tmp %>% na.omit()
+colnames(tmp2) <- cnames
+tmp2 <- as.data.frame(t(tmp2)) %>% mutate(sums=rowSums(.),
+                                          label=paste0(sums, " (", percent(sums/ncol(.), accuracy=0.1), ")")) %>% arrange(desc(sums)) %>% select(label)
+colnames(tmp2) <- "Yes (%)"
+tmp2 %>% kable() %>% kable_styling(bootstrap_options = "striped")
+```
+
+## Dependents
+**If you have dependents, then how many of them receive more than 50% of their financial support from you? `r print_n_reporting('q11')`**
+```{r, fig.height=3.5, fig.width=5.5}
+plot_frq(bns$q11) + xlab('Number of Dependents') + ylab("Frequency")
+```
+`r fig.cap(page.num, "Number of Dependents")`
+
+The majority of survey participants claim to have 0 dependents (`r unname(table(bns$q11)['0'])` people), `r unname(table(bns$q11)['1'])` survey participants claim to have only 1 dependent, and only `r nrow(bns[bns$q11 > 1, 'q11'] %>% na.omit())` claim to have 2 or more dependents.
+
+<br>
+
+### Dependent Ages
+**What is/are the age(s) of these dependent(s)?**
+```{r, fig.height=4, fig.width=7}
+dep.ages <- as.numeric(unname(unlist(bns %>% select(starts_with('q12_')))) %>% na.omit())
+dep.ages.df <- data.frame(Ages=dep.ages) # wouldn't compile in a single line for some reason
+
+plot_frq(dep.ages.df$Ages, type='histogram', show.mean = TRUE, ylim=c(0,12), show.mean.val = FALSE, show.sd = FALSE) +
+  geom_boxplot(data=dep.ages.df, aes(x=Ages, y=10.5), alpha=0.6, width=2, fill="#336699") +
+  geom_jitter(data=dep.ages.df, aes(x=Ages, y=10.5), position=position_jitter(height=1)) +
+  xlab('Dependent Ages (Years)') + ylab("Frequency")
+```
+`r fig.cap(page.num, "Dependent Age Distribution")`
+
+From figure 1.5, the data indicates that the majority of dependents are under the age of 18. The ages of these dependents range from `r min(dep.ages)` to `r max(dep.ages)` with a standard deviation of `r round(sd(dep.ages),2)`. The average age of a dependent is `r round(mean(dep.ages),2)` while the median age is `r round(median(dep.ages),2)`. The most common dependent age is `r names(sort(table(dep.ages), decreasing=TRUE)[1])` years old, with `r unname(sort(table(dep.ages), decreasing=TRUE)[1])` survey participants having dependents of this age.
+
+<br>
+
+## Parents Education
+**What is the highest level of education completed by your parents/guardians? `r print_n_reporting('q13')`**
+```{r, fig.height=4.5, fig.width=8}
+tmp <- as.data.frame(table(bns$q13)) %>%
+  mutate(Percent=lapply(Freq, function(x) paste0('(', percent(x/sum(!is.na(bns[['q13']])), accuracy = 0.1), ')')),
+         FirstGen=as.character(c(1,0,1,1,1,0,1)),
+         Var1=recode(Var1, "Other/Unknown" = "Other/ Unknown")) %>% arrange((desc(Freq)))
+
+ggplot(tmp, aes(x=factor(Var1, levels=Var1), y=Freq, fill=FirstGen, label=Percent)) + geom_col(colour = "black") +
+  scale_fill_manual(values=c("#336699", "#ecf0b7")) + geom_text(aes(y=Freq+13)) +
+  scale_x_discrete(labels=label_wrap(10)) +   geom_text(aes(y=Freq + 29, label=Freq)) +
+  xlab('') + ylab("Frequency") + theme(legend.position = "none")
+```
+`r fig.cap(page.num, "Parents Highest Education")`
+
+*Note: Variables filled with yellow above are used to show the conditions used to build the First Generation variable--see figure 1.7 for further information*.
+
+The highest level of education completed by most of the survey participants' parents is "`r names(sort(table(bns$q13), decreasing=TRUE)[1])`" (`r unname(sort(table(bns$q13), decreasing=TRUE)[1])` people), `r unname(sort(table(bns$q13), decreasing=TRUE)[2])` survey participants claim their parents' highest level is "`r names(sort(table(bns$q13), decreasing=TRUE)[2])`", and `r unname(sort(table(bns$q13), decreasing=TRUE)[3])` claim their parents' highest level is "`r names(sort(table(bns$q13), decreasing=TRUE)[3])`". Only a minority of the participants have parents who have some type of college level degree.
+
+<br />
+
+### First Generation
+*Note: students with parents' education identified as "Other/Unknown" were not marked as first gen since they could not be determined.* **`r print_n_reporting('firstgen')`**
+
+<div class = "row">
+<div class = "col-md-6">
+```{r, fig.height=4, fig.width=4}
+tmp <- data.frame(firstgen=bns$firstgen) %>% 
+  mutate(firstgen=factor(ifelse(is.na(firstgen), NA, ifelse(firstgen == 0, "Not First Gen", "First Gen")), levels=c("Not First Gen", "First Gen")))
+
+plot_frq(tmp$firstgen,  ylim=c(0,125)) + xlab('') + ylab("Frequency") 
+```
+</div>
+  
+<div class = "col-md-5">
+<br><br><br>`r fig.cap(page.num, "First Generation College Students")` <br>
+
+Figure 1.7, shows that `r unname(sort(table(bns$firstgen), decreasing=TRUE)[1])` survey participants are considered First Generation College students and `r unname(sort(table(bns$firstgen), decreasing=TRUE)[2])` survey participants are not considered First Generation College students. 
+</div>
+</div>
+
+As defined by the [University of California](https://www.universityofcalifornia.edu/sites/default/files/First-Generation%20Student%20Success%20at%20UC%208-2017.pdf), we define first generation students as "working to be part of the first generation in their families to earn a four-year university degree". As such, students in the data set are considered first generation if their parents do not have a Bachelor's or Master's degree from a four-year university. From the *Parents Education* graph (figure 1.6), all bars highlighted yellow are considered first gen, while all bars in blue are not (excluding Other/Unknown).
+
+<br />
+
+---
+
+## [Student Demographics](Student_Demo.html)
+*Click here to go to the Student Demographics page.*
+
