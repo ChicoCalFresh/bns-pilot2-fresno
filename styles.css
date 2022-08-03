@@ -21,16 +21,15 @@ Must use bootstrap 3.3.2
 
 /*  Fresno State branded colors: https://advancement.fresnostate.edu/ucomm/documents/webstyleguide09.pdf
 Default Background: Blue: HEX:#00287a
-Active Background: Cardinal: HEX:#b11a3b
+Active Background: Cardinal: HEX:#748aad
 Defualt Color(Text):White HEX#:#ffffff
 Active Color: Yellow/Gold HEX#:#ffbd43
 */
 
 /* Overall background color */
-/*
 .navbar-default {
   background-color: #00287a;
-  border-color: #b11a3b;
+  border-color: #748aad;
 }
 .navbar-default .navbar-brand {
   color: #ffffff;
@@ -58,29 +57,29 @@ Active Color: Yellow/Gold HEX#:#ffbd43
 .navbar-default .navbar-nav > li > .dropdown-menu > li > a:hover,
 .navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
   color: #ffbd43;
-  background-color: #b11a3b;
+  background-color: #748aad;
 }
 .navbar-default .navbar-nav > li > .dropdown-menu > li.divider {
-  background-color: #b11a3b;
+  background-color: #748aad;
 }
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
   color: #ffbd43;
-  background-color: #b11a3b;
+  background-color: #748aad;
 }
 .navbar-default .navbar-nav > .open > a,
 .navbar-default .navbar-nav > .open > a:hover,
 .navbar-default .navbar-nav > .open > a:focus {
   color: #ffbd43;
-  background-color: #b11a3b;
+  background-color: #748aad;
 }
 .navbar-default .navbar-toggle {
-  border-color: #b11a3b;
+  border-color: #748aad;
 }
 .navbar-default .navbar-toggle:hover,
 .navbar-default .navbar-toggle:focus {
-  background-color: #b11a3b;
+  background-color: #748aad;
 }
 .navbar-default .navbar-toggle .icon-bar {
   background-color: #ffffff;
@@ -108,99 +107,6 @@ Active Color: Yellow/Gold HEX#:#ffbd43
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
   .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
     color: #ffbd43;
-    background-color: #b11a3b;
-  }
-}
-*/
-
-/*  Fresno State branded colors: https://advancement.fresnostate.edu/ucomm/documents/webstyleguide09.pdf
-Default Background: Blue: HEX:#00287a
-Active Background: Cardinal: HEX:#b11a3b
-Defualt Color(Text):White HEX#:#ffffff
-Active Color: Yellow/Gold HEX#:#ffbd43
-*/
-
-/* Overall background color */
-.navbar-default {
-  background-color: #b11a3b;
-  border-color: #00287a;
-}
-.navbar-default .navbar-brand {
-  color: #ffffff;
-}
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-brand:focus {
-  color: #ffbd43;
-}
-.navbar-default .navbar-text {
-  color: #ffffff;
-}
-.navbar-default .navbar-nav > li > a {
-  color: #ffffff;
-}
-.navbar-default .navbar-nav > li > a:hover,
-.navbar-default .navbar-nav > li > a:focus {
-  color: #ffbd43;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu {
-  background-color: #b11a3b;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu > li > a {
-  color: #ffffff;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu > li > a:hover,
-.navbar-default .navbar-nav > li > .dropdown-menu > li > a:focus {
-  color: #ffbd43;
-  background-color: #00287a;
-}
-.navbar-default .navbar-nav > li > .dropdown-menu > li.divider {
-  background-color: #00287a;
-}
-.navbar-default .navbar-nav > .active > a,
-.navbar-default .navbar-nav > .active > a:hover,
-.navbar-default .navbar-nav > .active > a:focus {
-  color: #ffbd43;
-  background-color: #00287a;
-}
-.navbar-default .navbar-nav > .open > a,
-.navbar-default .navbar-nav > .open > a:hover,
-.navbar-default .navbar-nav > .open > a:focus {
-  color: #ffbd43;
-  background-color: #00287a;
-}
-.navbar-default .navbar-toggle {
-  border-color: #00287a;
-}
-.navbar-default .navbar-toggle:hover,
-.navbar-default .navbar-toggle:focus {
-  background-color: #00287a;
-}
-.navbar-default .navbar-toggle .icon-bar {
-  background-color: #ffffff;
-}
-.navbar-default .navbar-collapse,
-.navbar-default .navbar-form {
-  border-color: #ffffff;
-}
-.navbar-default .navbar-link {
-  color: #ffffff;
-}
-.navbar-default .navbar-link:hover {
-  color: #ffbd43;
-}
-
-@media (max-width: 767px) {
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a {
-    color: #ffffff;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:hover,
-  .navbar-default .navbar-nav .open .dropdown-menu > li > a:focus {
-    color: #ffbd43;
-  }
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a,
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:hover,
-  .navbar-default .navbar-nav .open .dropdown-menu > .active > a:focus {
-    color: #ffbd43;
-    background-color: #00287a;
+    background-color: #748aad;
   }
 }
