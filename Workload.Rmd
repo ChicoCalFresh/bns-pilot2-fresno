@@ -65,7 +65,7 @@ plot_frq(tmp$q19, type='histogram', ylim = c(0,18), geom.size = 1, show.prc = FA
 
 *Note that "41+" was rounded to 41 in the following analysis for the paid hours worked per week*. 
 
-The average number of paid hours worked per week (denoted by the dotted line) is `r round(mean(tmp$q19, na.rm = TRUE), 2)`, while the median is `r median(tmp$q19, na.rm = TRUE)` hours. The majority of students are considered as part-time workers (less than 40 hours per week), with `r names(sort(table(tmp$q19), decreasing=TRUE)[1])` hours per week being the most common response (`r unname(sort(table(tmp$q19), decreasing=TRUE)[1])` people) and `r names(sort(table(tmp$q19), decreasing=TRUE)[2])` hours per week being the next most frequent.
+The average number of paid hours worked per week (denoted by the dotted line) is `r round(mean(tmp$q19, na.rm = TRUE), 2)`, while the median is `r median(tmp$q19, na.rm = TRUE)` hours. The majority of students are considered as full-time workers (working 40 hours per week), with `r names(sort(table(tmp$q19), decreasing=TRUE)[1])` hours per week being the most common response (`r unname(sort(table(tmp$q19), decreasing=TRUE)[1])` people) and `r names(sort(table(tmp$q19), decreasing=TRUE)[2])` hours per week being the next most frequent.
 
 <br />
 
@@ -194,7 +194,7 @@ plot_frq(tmp$NonAcademic, type='histogram', geom.size=1, ylim=c(0,20), show.prc 
 ```
 `r fig.cap(page.num, "Non-Academic Hours Distribution")`
 
-The average number of total hours worked per week (denoted by the dotted line) is `r round(mean(tmp$NonAcademic, na.rm = TRUE), 2)`, while the median is `r median(tmp$NonAcademic, na.rm = TRUE)` hours. The data indicates that the majority of students work under 40 non-academic hours per week in total. Most participants, `r unname(sort(table(tmp$NonAcademic), decreasing=TRUE)[1])` respondents, claiming to spend `r names(sort(table(tmp$NonAcademic), decreasing=TRUE)[1])` hours per week on non-academic work followed by `r unname(sort(table(tmp$NonAcademic), decreasing=TRUE)[2])` people claiming to work `r names(sort(table(tmp$NonAcademic), decreasing=TRUE)[2])` non-academic hours per week. 
+The average number of total hours worked per week (denoted by the dotted line) is `r round(mean(tmp$NonAcademic, na.rm = TRUE), 2)`, while the median is `r median(tmp$NonAcademic, na.rm = TRUE)` hours. The data indicates that the majority of students work under 40 non-academic hours per week in total. `r unname(sort(table(tmp$NonAcademic), decreasing=TRUE)[1])` respondents, claim to spend `r names(sort(table(tmp$NonAcademic), decreasing=TRUE)[1])` hours per week on non-academic work followed by `r unname(sort(table(tmp$NonAcademic), decreasing=TRUE)[2])` people claiming to work `r names(sort(table(tmp$NonAcademic), decreasing=TRUE)[2])` non-academic hours per week. 
 
 
 <br />
