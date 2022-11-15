@@ -23,5 +23,10 @@ Researchers and campus staff are encouraged to review the information in this an
 **Disclaimer on Missing Data:** Students were allowed to select answers such as "Prefer not to answer" or "I don't know" as responses to every question asked. These answers were then converted to missing values, denoted as *NA*, and this is the cause of the missing data for certain questions (not 100% of respondents reporting). The total number of non-missing responses (and percentage of the total data) are provided for each question.
 <br />
 
+If you are interested in viewing the other campuses results please select the campus you would like to view from below:
+
+- [Chico State](https://chicocalfresh.github.io/bns-pilot2-chico/)
+- [CSU, Northridge](https://chicocalfresh.github.io/bns-pilot2-csun/)
+
 ### [`r emo::ji("magnifying_glass_tilted_right")` How to use this website](Instructions.html)
 *Click above for instructions on how to navigate the website and interpret graphs.*
